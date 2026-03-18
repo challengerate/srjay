@@ -26,7 +26,6 @@ import { RowLabel as RowLabel_d2aff3abcb7b90b04c6a0836d1455041 } from '@/payload
 import { Icon as Icon_dcf7d41fd9c48dc4902cb7c3502f5f43 } from '../../../payload/components/graphics/Icon.tsx'
 import { Logo as Logo_7861e673efaf98c6f5bbd0d676d97ab9 } from '../../../payload/components/graphics/Logo.tsx'
 import { BeforeDashboard as BeforeDashboard_6bf288f4387b1ea5c71ce14579a9098c } from '../../../payload/components/BeforeDashboard'
-import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
 
 export const importMap = {
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
@@ -56,6 +55,5 @@ export const importMap = {
   "@/payload/globals/Footer/RowLabel#RowLabel": RowLabel_d2aff3abcb7b90b04c6a0836d1455041,
   "/payload/components/graphics/Icon.tsx#Icon": Icon_dcf7d41fd9c48dc4902cb7c3502f5f43,
   "/payload/components/graphics/Logo.tsx#Logo": Logo_7861e673efaf98c6f5bbd0d676d97ab9,
-  "/payload/components/BeforeDashboard#BeforeDashboard": BeforeDashboard_6bf288f4387b1ea5c71ce14579a9098c,
-  "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24
+  "/payload/components/BeforeDashboard#BeforeDashboard": BeforeDashboard_6bf288f4387b1ea5c71ce14579a9098c
 }

@@ -59,7 +59,7 @@ export async function Footer() {
           <p>
             Source code on{' '}
             <a
-              href="https://github.com/srjaykikani/srjay"
+              href="https://github.com/prit007p"
               target="_blank"
               rel="noopener noreferrer"
               className="underline underline-offset-4 hover:text-muted-foreground transition-colors"

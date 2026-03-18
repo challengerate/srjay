@@ -1,4 +1,4 @@
-# srjay.com
+# pritbaldaniya.com
 
 Personal portfolio website built with Next.js, Payload CMS, and tRPC.
 

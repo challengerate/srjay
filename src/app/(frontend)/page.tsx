@@ -53,7 +53,7 @@ export default async function HomePage() {
     }),
   ])
 
-  const githubUsername = profile.github || 'srjaykikani'
+  const githubUsername = profile.github || 'prit007p'
   const contributions = getGitHubContributions(githubUsername)
 
   return (

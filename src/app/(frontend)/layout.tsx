@@ -40,14 +40,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 export const metadata: Metadata = {
   metadataBase: new URL(getServerSideURL()),
   title: {
-    default: 'Jay Kikani | Full-Stack Developer',
-    template: '%s | Jay Kikani',
+    default: 'Prit Baldaniya | Full-Stack Developer',
+    template: '%s | Prit Baldaniya',
   },
   description:
-    'Jay Kikani (srjay) - Full-stack developer specializing in Next.js, Payload CMS, React, and TypeScript. Building scalable web applications with modern technologies.',
+    'Prit Baldaniya - Full-stack developer specializing in Next.js, Payload CMS, React, and TypeScript. Building scalable web applications with modern technologies.',
   keywords: [
-    'Jay Kikani',
-    'srjay',
+    'Prit Baldaniya',
     'Full-Stack Developer',
     'Next.js Developer',
     'Payload CMS',
@@ -59,9 +58,9 @@ export const metadata: Metadata = {
     'Software Engineer',
     'ChallengeRate',
   ],
-  authors: [{ name: 'Jay Kikani', url: 'https://srjay.com' }],
-  creator: 'Jay Kikani',
-  publisher: 'Jay Kikani',
+  authors: [{ name: 'Prit Baldaniya', url: 'https://pritbaldaniya.com' }],
+  creator: 'Prit Baldaniya',
+  publisher: 'Prit Baldaniya',
   robots: {
     index: true,
     follow: true,
@@ -76,9 +75,9 @@ export const metadata: Metadata = {
   openGraph: mergeOpenGraph(),
   twitter: {
     card: 'summary_large_image',
-    creator: '@_srjay',
-    site: '@_srjay',
-    title: 'Jay Kikani | Full-Stack Developer',
+    creator: '@_pritbaldaniya',
+    site: '@_pritbaldaniya',
+    title: 'Prit Baldaniya | Full-Stack Developer',
     description:
       'Full-stack developer specializing in Next.js, Payload CMS, React, and TypeScript. Building scalable web applications.',
   },

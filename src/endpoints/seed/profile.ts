@@ -60,7 +60,7 @@ type ProfileData = {
 
 export function getProfileData(mediaMap: MediaMap): ProfileData {
   return {
-    name: "Hey, I'm Jay!",
+    name: "Hey, I'm Prit!",
     title: 'Software Developer',
     languages: [{ language: 'English' }, { language: 'Hindi' }, { language: 'Gujarati' }],
     bio: richText(
@@ -83,26 +83,26 @@ export function getProfileData(mediaMap: MediaMap): ProfileData {
     phone: '+1 (555) 123-4567',
     location: 'Gujarat, India',
     timezone: 'Asia/Kolkata',
-    github: 'srjaykikani',
+    github: 'prit007p',
     socialLinks: [
       {
         platform: 'github',
-        url: 'https://github.com/srjaykikani',
+        url: 'https://github.com/prit007p',
         label: 'GitHub',
       },
       {
         platform: 'twitter',
-        url: 'https://twitter.com/_srjay',
+        url: 'https://twitter.com/prit007p',
         label: 'Twitter / X',
       },
       {
         platform: 'instagram',
-        url: 'https://instagram.com/_srjay',
+        url: 'https://instagram.com/prit_baldaniya_',
         label: 'Instagram',
       },
       {
         platform: 'linkedin',
-        url: 'https://linkedin.com/in/srjaykikani',
+        url: 'https://www.linkedin.com/in/prit-baldaniya-98b221272/',
         label: 'LinkedIn',
       },
     ],

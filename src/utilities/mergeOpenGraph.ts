@@ -6,16 +6,16 @@ const defaultOpenGraph: Metadata['openGraph'] = {
   type: 'website',
   locale: 'en_US',
   url: getServerSideURL(),
-  siteName: 'Jay Kikani',
-  title: 'Jay Kikani | Full-Stack Developer',
+  siteName: 'Prit Baldaniya',
+  title: 'Prit Baldaniya | Full-Stack Developer',
   description:
-    'Jay Kikani (srjay) - Full-stack developer specializing in Next.js, Payload CMS, React, and TypeScript. Building scalable web applications with modern technologies.',
+    'Prit Baldaniya - Full-stack developer specializing in Next.js, Payload CMS, React, and TypeScript. Building scalable web applications with modern technologies.',
   images: [
     {
       url: `${getServerSideURL()}/og-image.png`,
       width: 1200,
       height: 630,
-      alt: 'Jay Kikani - Full-Stack Developer',
+      alt: 'Prit Baldaniya - Full-Stack Developer',
     },
   ],
 }

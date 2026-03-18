@@ -12,7 +12,7 @@ export const Profile: GlobalConfig = {
       label: 'Full Name',
       type: 'text',
       required: true,
-      defaultValue: 'srjay',
+      defaultValue: 'pritbaldaniya',
     },
     {
       name: 'title',
@@ -101,7 +101,7 @@ export const Profile: GlobalConfig = {
       name: 'github',
       label: 'GitHub Username',
       type: 'text',
-      defaultValue: 'srjaykikani',
+      defaultValue: 'pritbaldaniya',
       admin: {
         description: 'Used for contribution calendar',
       },

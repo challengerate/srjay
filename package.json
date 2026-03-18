@@ -1,10 +1,10 @@
 {
-  "name": "srjay-portfolio",
+  "name": "pritbaldaniya-portfolio",
   "version": "1.0.0",
-  "description": "Portfolio website for srjay.com - Built with Next.js, Payload CMS, and tRPC",
+  "description": "Portfolio website for pritbaldaniya.com - Built with Next.js, Payload CMS, and tRPC",
   "license": "MIT",
-  "author": "srjay",
-  "homepage": "https://srjay.com",
+  "author": "pritbaldaniya",
+  "homepage": "https://pritbaldaniya.com",
   "type": "module",
   "scripts": {
     "build": "cross-env NODE_OPTIONS=\"--no-deprecation --max-old-space-size=8000\" next build",

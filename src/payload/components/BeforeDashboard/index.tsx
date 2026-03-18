@@ -12,7 +12,7 @@ export const BeforeDashboard: React.FC = () => {
       }}
     >
       <h2 style={{ marginTop: 0, marginBottom: '8px', fontSize: '18px' }}>
-        Welcome to srjay.com CMS
+        Welcome to pritbaldaniya.com CMS
       </h2>
       <p style={{ marginBottom: '16px', color: '#5F6368' }}>
         Click the button below to seed your database with sample content.

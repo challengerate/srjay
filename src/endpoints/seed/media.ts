@@ -11,8 +11,8 @@ interface SeedMediaFile {
 }
 
 const mediaFiles: SeedMediaFile[] = [
-  { filename: 'avatar.png', alt: 'S R Jay Kikani profile photo' },
-  { filename: 'hero.png', alt: 'S R Jay Kikani hero image' },
+  { filename: 'avatar.png', alt: 'Prit Baldaniya profile photo' },
+  { filename: 'hero.png', alt: 'Prit Baldaniya hero image' },
   { filename: 'project-challengerate.png', alt: 'ChallengeRate project screenshot' },
   { filename: 'project-drvandna.png', alt: 'Dr. Vandna website screenshot' },
   { filename: 'project-ecell.png', alt: 'E-Cell SVNIT website screenshot' },
