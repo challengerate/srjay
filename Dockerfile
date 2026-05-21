@@ -59,8 +59,8 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
 # Set the correct permission for runtime caches and local upload storage
-RUN mkdir -p .next public/media
-RUN chown -R nextjs:nodejs .next public
+RUN mkdir -p .next media public/media
+RUN chown -R nextjs:nodejs .next media public
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
