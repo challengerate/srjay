@@ -23,6 +23,8 @@ const SECTIONS = [
   { id: 'contact', title: 'Contact' },
 ]
 
+export const dynamic = 'force-dynamic'
+
 export default async function HomePage() {
   const payload = await getPayload({ config })
 

@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   description: 'A curated collection of photos and visual moments.',
 }
 
+export const dynamic = 'force-dynamic'
+
 export default async function GalleryPage() {
   const payload = await getPayload({ config })
 

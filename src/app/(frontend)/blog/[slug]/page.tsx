@@ -12,6 +12,8 @@ import { RichText } from '@/components/RichText'
 import { TableOfContents } from '@/components/TableOfContents'
 import { getMedia } from '@/lib/type-guards'
 
+export const dynamic = 'force-dynamic'
+
 interface PageProps {
   params: Promise<{ slug: string }>
 }
@@ -23,20 +25,6 @@ function formatDate(dateString: string): string {
     day: 'numeric',
     year: 'numeric',
   })
-}
-
-export async function generateStaticParams() {
-  const payload = await getPayload({ config })
-  const { docs } = await payload.find({
-    collection: 'blogs',
-    depth: 0,
-    limit: 100,
-    pagination: false,
-  })
-
-  return docs
-    .filter((doc): doc is typeof doc & { slug: string } => typeof doc.slug === 'string')
-    .map((doc) => ({ slug: doc.slug }))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

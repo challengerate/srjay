@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   description: 'Thoughts on development, design, and technology.',
 }
 
+export const dynamic = 'force-dynamic'
+
 export default async function BlogPage() {
   const payload = await getPayload({ config })
 
