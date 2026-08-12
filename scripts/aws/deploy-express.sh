@@ -25,31 +25,42 @@ if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
   docker push "$IMAGE"
 else
   echo "Local Docker unavailable — building on EC2 ${SRJAY_INSTANCE_ID}..."
-  bash "$ROOT/scripts/aws/build-on-ec2.sh" "$IMAGE"
+  BUILD_INSTANCE_ID="$SRJAY_INSTANCE_ID" bash "$ROOT/scripts/aws/build-on-ec2.sh" "$IMAGE"
 fi
+
+# shellcheck source=scripts/aws/express-cloudfront-lib.sh
+source "$ROOT/scripts/aws/express-cloudfront-lib.sh"
 
 SERVICE_ARN="$(aws ecs list-services --cluster "$EXPRESS_CLUSTER" \
   --query "serviceArns[?contains(@, \`${SERVICE_NAME}\`)] | [0]" --output text)"
 
+if [ "$SERVICE_ARN" = "None" ] || [ -z "$SERVICE_ARN" ]; then
+  echo "Image pushed to ${IMAGE}. No Express service yet — run provision-express-cloudfront.sh."
+  exit 0
+fi
+
 ENV_FILE="/tmp/srjay-express.env"
-CMD_ID="$(aws ssm send-command \
-  --instance-ids "$SRJAY_INSTANCE_ID" \
-  --document-name AWS-RunShellScript \
-  --parameters 'commands=["cat /opt/srjay/app.env"]' \
-  --query 'Command.CommandId' --output text)"
-sleep 4
-aws ssm get-command-invocation --command-id "$CMD_ID" --instance-id "$SRJAY_INSTANCE_ID" \
-  --query 'StandardOutputContent' --output text >"$ENV_FILE"
-# shellcheck source=scripts/aws/express-cloudfront-lib.sh
-source "$ROOT/scripts/aws/express-cloudfront-lib.sh"
+fetch_ssm_file "$SRJAY_INSTANCE_ID" "/opt/srjay/app.env" "$ENV_FILE"
+if [ ! -s "$ENV_FILE" ]; then
+  echo "Empty env file from /opt/srjay/app.env on ${SRJAY_INSTANCE_ID}" >&2
+  exit 1
+fi
+
 ENV_JSON="$(env_file_to_json "$ENV_FILE")"
 rm -f "$ENV_FILE"
 
 PRIMARY="$(jq -n --arg image "$IMAGE" --argjson env "$ENV_JSON" \
-  '{ image: $image, containerPort: 3000, environment: $env }')"
+  '{
+    image: $image,
+    containerPort: 3000,
+    environment: $env,
+    awsLogsConfiguration: { logGroup: "/ecs/express/srjay", logStreamPrefix: "app" }
+  }')"
 
 aws ecs update-express-gateway-service \
   --service-arn "$SERVICE_ARN" \
   --primary-container "$PRIMARY"
+
+wait_for_express_service "$SERVICE_ARN"
 
 echo "Deployed ${IMAGE} to ${SERVICE_ARN}"

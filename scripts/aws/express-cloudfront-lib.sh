@@ -59,6 +59,75 @@ env_file_to_json() {
   jq -Rn '[inputs | select(length>0 and (startswith("#")|not)) | split("=") | {name: .[0], value: (.[1:] | join("="))}]' "$file"
 }
 
+fetch_ssm_file() {
+  local instance_id="$1" remote_path="$2" dest="$3"
+  local cmd_id
+  cmd_id="$(aws ssm send-command \
+    --instance-ids "$instance_id" \
+    --document-name AWS-RunShellScript \
+    --parameters "commands=[\"cat ${remote_path}\"]" \
+    --query 'Command.CommandId' --output text)"
+  local deadline=$(( $(date +%s) + 120 ))
+  while [ "$(date +%s)" -lt "$deadline" ]; do
+    local status
+    status="$(aws ssm get-command-invocation --command-id "$cmd_id" --instance-id "$instance_id" \
+      --query Status --output text 2>/dev/null || echo Pending)"
+    case "$status" in
+      Success)
+        aws ssm get-command-invocation --command-id "$cmd_id" --instance-id "$instance_id" \
+          --query StandardOutputContent --output text >"$dest"
+        return 0
+        ;;
+      Failed|Cancelled|TimedOut)
+        aws ssm get-command-invocation --command-id "$cmd_id" --instance-id "$instance_id" \
+          --query '[Status,StandardErrorContent]' --output text >&2
+        return 1
+        ;;
+    esac
+    sleep 3
+  done
+  echo "Timed out waiting for SSM command $cmd_id" >&2
+  return 1
+}
+
+require_express_service_arn() {
+  local cluster="$1" service_name="$2"
+  local arn
+  arn="$(aws ecs list-services --cluster "$cluster" \
+    --query "serviceArns[?contains(@, \`${service_name}\`)] | [0]" --output text)"
+  if [ "$arn" = "None" ] || [ -z "$arn" ]; then
+    echo "Express service ${service_name} not found in ${cluster}. Run provision-express-cloudfront.sh first." >&2
+    exit 1
+  fi
+  echo "$arn"
+}
+
+ensure_ecr_image() {
+  local repo="$1" tag="$2"
+  aws ecr describe-images --repository-name "$repo" --image-ids "imageTag=${tag}" >/dev/null 2>&1 \
+    || { echo "ECR image ${repo}:${tag} not found. Build and push first (deploy-express.sh)." >&2; exit 1; }
+}
+
+resolve_image_tag() {
+  local repo="$1"
+  if [ -n "${IMAGE_TAG:-}" ]; then echo "$IMAGE_TAG"; return; fi
+  if [ -n "${ECR_TAG:-}" ]; then echo "$ECR_TAG"; return; fi
+  if git rev-parse --short=7 HEAD >/dev/null 2>&1; then git rev-parse --short=7 HEAD; return; fi
+  local latest
+  latest="$(aws ecr describe-images --repository-name "$repo" \
+    --query 'sort_by(imageDetails,& imagePushedAt)[-1].imageTags[0]' --output text 2>/dev/null || true)"
+  if [ -n "$latest" ] && [ "$latest" != "None" ]; then echo "$latest"; return; fi
+  echo "IMAGE_TAG or ECR_TAG is required" >&2
+  exit 1
+}
+
+amplify_env_to_json() {
+  local app_id="$1"
+  aws amplify get-app --app-id "$app_id" \
+    --query 'app.environmentVariables' --output json \
+    | jq '[(. // {}) | to_entries[] | {name: .key, value: (.value | tostring)}]'
+}
+
 wait_for_express_service() {
   local arn="$1"
   local deadline=$(( $(date +%s) + 1200 ))
@@ -174,7 +243,6 @@ upsert_cloudfront_apprunner_style_origin() {
       | .DefaultCacheBehavior.CachePolicyId = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
       | .DefaultCacheBehavior.OriginRequestPolicyId = "b689b0a8-53d0-40ab-baf2-68738e2966ac"
       | .Enabled = true
-      | .Aliases = { Quantity: 1, Items: [$alias] }
       | .ViewerCertificate = {
           ACMCertificateArn: $cert, SSLSupportMethod: "sni-only",
           MinimumProtocolVersion: "TLSv1.2_2021"

@@ -9,8 +9,9 @@ source "$ROOT/scripts/aws/express-cloudfront-lib.sh"
 
 SERVICE_NAME="srjay"
 ECR_REPO="srjay"
-ECR_TAG="${ECR_TAG:-705f6a2}"
+ECR_TAG="$(resolve_image_tag "$ECR_REPO")"
 IMAGE="${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:${ECR_TAG}"
+ensure_ecr_image "$ECR_REPO" "$ECR_TAG"
 CF_DISTRIBUTION_ID="${CF_DISTRIBUTION_ID:-E15GABHK78U34A}"
 CF_ALIAS="srjay.dev"
 HOSTED_ZONE_ID="Z060245932W0II48SYFIC"
@@ -31,14 +32,11 @@ fi
 echo "ACM cert: $CF_CERT_ARN"
 
 ENV_FILE="/tmp/srjay-express.env"
-CMD_ID="$(aws ssm send-command \
-  --instance-ids "$SRJAY_INSTANCE_ID" \
-  --document-name AWS-RunShellScript \
-  --parameters 'commands=["cat /opt/srjay/app.env"]' \
-  --query 'Command.CommandId' --output text)"
-sleep 4
-aws ssm get-command-invocation --command-id "$CMD_ID" --instance-id "$SRJAY_INSTANCE_ID" \
-  --query 'StandardOutputContent' --output text >"$ENV_FILE"
+fetch_ssm_file "$SRJAY_INSTANCE_ID" "/opt/srjay/app.env" "$ENV_FILE"
+if [ ! -s "$ENV_FILE" ]; then
+  echo "Empty env file from /opt/srjay/app.env on ${SRJAY_INSTANCE_ID}" >&2
+  exit 1
+fi
 
 ENV_JSON="$(env_file_to_json "$ENV_FILE")"
 
