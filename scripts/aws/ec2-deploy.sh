@@ -19,11 +19,10 @@ remote_script="$(cat <<EOF
 set -euo pipefail
 aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
 docker pull $image
-docker stop srjay-app 2>/dev/null || true
-docker rm srjay-app 2>/dev/null || true
+docker rm -f srjay-app 2>/dev/null || true
 docker run -d --name srjay-app --restart unless-stopped \\
+  --network srjay --network-alias srjay-app \\
   --env-file $SRJAY_ENV_FILE \\
-  -p 127.0.0.1:3000:3000 \\
   $image
 docker image prune -f >/dev/null 2>&1 || true
 EOF
